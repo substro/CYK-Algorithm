@@ -18,7 +18,7 @@ const GrammarRow: React.FC<GrammarRowProps> = (props) => {
 	const { isFirst, onDelete, index, onInputChange } = props;
 	const [nonTerminalValue, setNonTerminalValue] = useState("");
 	const [terminalValue, setTerminalValue] = useState("");
-
+	
 	const handleDelete = () => {
 		if (onDelete && !isFirst) {
 			onDelete(index);

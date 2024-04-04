@@ -13,7 +13,7 @@ function App() {
 	) => {
 		setFormData((prevData) => ({
 			...prevData,
-			[index]: { nonTerminal, terminal },
+			[index]: { nonTerminal: nonTerminal ? nonTerminal : "S", terminal },
 		}));
 	};
 	const [grammarRows, setGrammarRows] = useState([
@@ -27,15 +27,15 @@ function App() {
 			...prevRows,
 			<GrammarRow
 				onDelete={handleDelete}
-				index={prevRows.length + 1}
+				index={prevRows.length}
 				onInputChange={handleGrammarInputChange}
 			/>,
 		]);
 	};
 
 	const handleDelete = (indexToDelete: number) => {
-		setGrammarRows((prevRows) =>
-			prevRows.filter((row, index) => index + 1 !== indexToDelete)
+		setGrammarRows(
+			grammarRows.filter((_, itemIndex) => itemIndex !== indexToDelete)
 		);
 	};
 
@@ -79,12 +79,13 @@ function App() {
 					</div>
 					<div className="grid gap-2 w-fit ">
 						{grammarRows.map((row, index) => (
-							<React.Fragment key={index}>{row}</React.Fragment>
+							<div key={index}>{row}</div>
 						))}
 					</div>
+
 					<Button
 						variant={"link"}
-						className="text-seondary"
+						className="text-seondary text-xl"
 						onClick={addGrammarRow}
 					>
 						+ Add Row
