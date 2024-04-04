@@ -6,6 +6,8 @@ import GrammarRow from "./components/ui/grammarRow";
 import { Input } from "./components/ui/input";
 
 function App() {
+	const [wordInput, setWordInput] = useState("");
+	const [formData, setFormData] = useState({});
 	const handleGrammarInputChange = (
 		index: number,
 		nonTerminal: string,
@@ -17,25 +19,38 @@ function App() {
 		}));
 	};
 	const [grammarRows, setGrammarRows] = useState([
-		<GrammarRow isFirst index={0} onInputChange={handleGrammarInputChange} />,
+		{
+			key: 0,
+			component: (
+				<GrammarRow
+					isFirst
+					index={0}
+					onInputChange={handleGrammarInputChange}
+				/>
+			),
+		},
 	]);
-	const [wordInput, setWordInput] = useState("");
-	const [formData, setFormData] = useState({});
 
 	const addGrammarRow = () => {
+		const newKey = grammarRows.length;
 		setGrammarRows((prevRows) => [
 			...prevRows,
-			<GrammarRow
-				onDelete={handleDelete}
-				index={prevRows.length}
-				onInputChange={handleGrammarInputChange}
-			/>,
+			{
+				key: newKey,
+				component: (
+					<GrammarRow
+						onDelete={handleDelete}
+						index={newKey}
+						onInputChange={handleGrammarInputChange}
+					/>
+				),
+			},
 		]);
 	};
 
-	const handleDelete = (indexToDelete: number) => {
-		setGrammarRows(
-			grammarRows.filter((_, itemIndex) => itemIndex !== indexToDelete)
+	const handleDelete = (keyToDelete: number) => {
+		setGrammarRows((prevRows) =>
+			prevRows.filter((row) => row.key !== keyToDelete)
 		);
 	};
 
@@ -78,9 +93,13 @@ function App() {
 						</Alert>
 					</div>
 					<div className="grid gap-2 w-fit ">
-						{grammarRows.map((row, index) => (
-							<div key={index}>{row}</div>
-						))}
+						{grammarRows.map((row, index) => {
+							return (
+								<div key={index}>
+									<div key={row.key}>{row.component}</div>
+								</div>
+							);
+						})}
 					</div>
 
 					<Button
