@@ -1,83 +1,49 @@
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, X } from "lucide-react";
 import React, { useState } from "react";
+import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Alert, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
-import GrammarRow from "./components/ui/grammarRow";
 import { Input } from "./components/ui/input";
+type grammarSchemha = {
+	nonTerminal: string;
+	terminal: string;
+};
 
+export type arrayFormType = {
+	grammar: grammarSchemha[];
+	word: string;
+};
 function App() {
-	const [wordInput, setWordInput] = useState("");
-	const [formData, setFormData] = useState({});
-	const handleGrammarInputChange = (
-		index: number,
-		nonTerminal: string,
-		terminal: string
-	) => {
-		setFormData((prevData) => ({
-			...prevData,
-			[index]: { nonTerminal: nonTerminal ? nonTerminal : "S", terminal },
-		}));
-	};
-	const [grammarRows, setGrammarRows] = useState([
-		{
-			key: 0,
-			component: (
-				<GrammarRow
-					isFirst
-					index={0}
-					onInputChange={handleGrammarInputChange}
-				/>
-			),
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<arrayFormType>({
+		defaultValues: {
+			grammar: [{ nonTerminal: "S", terminal: "" }],
 		},
-	]);
+	});
+	const { fields, append, remove } = useFieldArray<arrayFormType>({
+		control,
+		name: "grammar",
+	});
 
-	const addGrammarRow = () => {
-		const newKey = grammarRows.length;
-		setGrammarRows((prevRows) => [
-			...prevRows,
-			{
-				key: newKey,
-				component: (
-					<GrammarRow
-						onDelete={handleDelete}
-						index={newKey}
-						onInputChange={handleGrammarInputChange}
-					/>
-				),
-			},
-		]);
-	};
-
-	const handleDelete = (keyToDelete: number) => {
-		setGrammarRows((prevRows) =>
-			prevRows.filter((row) => row.key !== keyToDelete)
-		);
-	};
-
-	const handleWordInputChange = (e: {
-		target: { value: React.SetStateAction<string> };
-	}) => {
-		setWordInput(e.target.value);
-	};
-
-	const handleSubmit = () => {
-		const data = {
-			grammarRows: Object.values(formData),
-			word: wordInput,
-		};
-		const jsonData = JSON.stringify(data, null, 2);
-		console.log(jsonData);
-	};
+	const onFormSubmit: SubmitHandler<arrayFormType> = (data) =>
+		console.log(data);
 
 	return (
-		<div className="flex  flex-col items-center bg-primary h-screen">
+		<div className="flex flex-col items-center bg-primary h-screen">
 			<header className="text-center text-secondary my-[2rem]">
 				<h1 className="text-[3.5rem] font-bold">CYK- Algorithm</h1>
 				<h3 className="text-[1rem] font-semibold text-pretty">
 					Input your grammar to check if a certain word can be generated or not
 				</h3>
 			</header>
-			<main className="my-[4rem] text-secondary mx-[2rem]">
+			<form
+				onSubmit={handleSubmit(onFormSubmit)}
+				className="my-[4rem] text-secondary mx-[2rem]"
+			>
 				<div className="grid gap-4">
 					<div className="space-y-2 ">
 						<h2 className=" text-[2rem] font-medium leading-none">Grammar</h2>
@@ -93,10 +59,50 @@ function App() {
 						</Alert>
 					</div>
 					<div className="grid gap-2 w-fit ">
-						{grammarRows.map((row, index) => {
+						{fields.map((field, index) => {
 							return (
-								<div key={index}>
-									<div key={row.key}>{row.component}</div>
+								<div className="flex  gap-5" key={field.id}>
+									<Input
+										{...register(`grammar.${index}.nonTerminal`, {
+											required: "This field is required",
+										})}
+										className={`h-8 text-primary w-[30%] text-[1rem] font-bold ${
+											errors?.grammar?.[index]?.nonTerminal?.message &&
+											"border-2 border-red-500"
+										}`}
+										disabled={index === 0}
+									/>
+									{/* {errors?.grammar && (
+										<p>{errors?.grammar?.[index]?.nonTerminal?.message}</p>
+									)} */}
+
+									<svg
+										data-name="1-Arrow Right"
+										xmlns="http://www.w3.org/2000/svg"
+										viewBox="0 0 32 32"
+										className="rotate-90 w-[3rem] h-[2rem] fill-current flex-auto"
+									>
+										<path d="m26.71 10.29-10-10a1 1 0 0 0-1.41 0l-10 10 1.41 1.41L15 3.41V32h2V3.41l8.29 8.29z" />
+									</svg>
+									<Input
+										className={`h-8 text-primary text-[1rem] ${
+											errors?.grammar?.[index]?.terminal?.message &&
+											"border-2 border-red-500"
+										}`}
+										{...register(`grammar.${index}.terminal`, {
+											required: "This field is required",
+										})}
+									/>
+									<Button
+										disabled={index === 0}
+										variant="outline"
+										size="icon"
+										className="text-primary h-auto"
+										type="button"
+										onClick={() => remove(index)}
+									>
+										<X />
+									</Button>
 								</div>
 							);
 						})}
@@ -105,7 +111,13 @@ function App() {
 					<Button
 						variant={"link"}
 						className="text-seondary text-xl"
-						onClick={addGrammarRow}
+						type="button"
+						onClick={() =>
+							append({
+								nonTerminal: "",
+								terminal: "",
+							})
+						}
 					>
 						+ Add Row
 					</Button>
@@ -117,9 +129,10 @@ function App() {
 					</p>
 					<Input
 						id="word"
-						className="h-8 text-primary text-[1rem]"
-						value={wordInput}
-						onChange={handleWordInputChange}
+						className={`h-8 text-primary text-[1rem] ${
+							errors?.word?.message && "border-2 border-red-500"
+						}`}
+						{...register(`word`, { required: "true" })}
 					/>
 				</div>
 
@@ -127,11 +140,11 @@ function App() {
 					variant={"secondary"}
 					size={"lg"}
 					className="text-[1.5rem] "
-					onClick={handleSubmit}
+					type="submit"
 				>
 					Check Result
 				</Button>
-			</main>
+			</form>
 		</div>
 	);
 }
