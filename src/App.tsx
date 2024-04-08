@@ -1,8 +1,16 @@
 import { AlertCircle, X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Alert, AlertTitle } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "./components/ui/dialog";
 import { Input } from "./components/ui/input";
 type grammarSchemha = {
 	nonTerminal: string;
@@ -29,8 +37,32 @@ function App() {
 		name: "grammar",
 	});
 
-	const onFormSubmit: SubmitHandler<arrayFormType> = (data) =>
-		console.log(data);
+	const onFormSubmit: SubmitHandler<arrayFormType> = (data) => {
+		console.log(data); // Optional: Log the data
+
+		// Make a POST request to your endpoint
+		fetch(
+			"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm",
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json", // Set the content type as JSON
+				},
+				body: JSON.stringify(data), // Convert data to JSON string
+			}
+		)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				// Optional: Handle successful response
+				console.log("Data sent successfully" + "response: " + response);
+			})
+			.catch((error) => {
+				// Optional: Handle error
+				console.error("Error sending data:", error.message);
+			});
+	};
 
 	return (
 		<div className="flex flex-col items-center bg-primary h-screen">
@@ -72,9 +104,6 @@ function App() {
 										}`}
 										disabled={index === 0}
 									/>
-									{/* {errors?.grammar && (
-										<p>{errors?.grammar?.[index]?.nonTerminal?.message}</p>
-									)} */}
 
 									<svg
 										data-name="1-Arrow Right"
@@ -135,15 +164,25 @@ function App() {
 						{...register(`word`, { required: "true" })}
 					/>
 				</div>
-
-				<Button
-					variant={"secondary"}
-					size={"lg"}
-					className="text-[1.5rem] "
-					type="submit"
-				>
-					Check Result
-				</Button>
+				<Dialog>
+					<DialogTrigger asChild>
+						<Button
+							variant={"secondary"}
+							size={"lg"}
+							className="text-[1.5rem] "
+							type="submit"
+						>
+							Check Result
+						</Button>
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-md">
+						<DialogHeader>
+							<DialogTitle>CYK Algorithm Results</DialogTitle>
+							<DialogDescription>Word: </DialogDescription>
+						</DialogHeader>
+						<p></p>
+					</DialogContent>
+				</Dialog>
 			</form>
 		</div>
 	);
