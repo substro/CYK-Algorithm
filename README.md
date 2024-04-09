@@ -26,7 +26,7 @@ pnpm install
 
 - Obtain the endpoint URL from your AWS Lambda deployment
 - Update the endpoint URL in the React code to point to your AWS Lambda function
-- 
+  
 Start the development server:
 ```
 pnpm dev
