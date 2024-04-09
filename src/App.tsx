@@ -38,13 +38,15 @@ function App() {
 	});
 
 	const onFormSubmit: SubmitHandler<arrayFormType> = (data) => {
-		console.log(data); // Optional: Log the data
+		console.log(data);
+		const apiEndpoint =
+			"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm";
+		const apikey = "ryhTgdWZ0AdZJbsnz17324m4r9zV9MC5LICtNHz4";
 
 		axios
-			.post(
-				"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm",
-				data
-			)
+			.post(apiEndpoint, data, {
+				headers: { "X-Api-Key": apikey },
+			})
 			.then((response) => {
 				console.log("Success!! ", "response: ", response.data);
 			})
