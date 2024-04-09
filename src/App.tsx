@@ -1,3 +1,4 @@
+import axios from "axios";
 import { AlertCircle, X } from "lucide-react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { Alert, AlertTitle } from "./components/ui/alert";
@@ -39,27 +40,16 @@ function App() {
 	const onFormSubmit: SubmitHandler<arrayFormType> = (data) => {
 		console.log(data); // Optional: Log the data
 
-		// Make a POST request to your endpoint
-		fetch(
-			"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json", // Set the content type as JSON
-				},
-				body: JSON.stringify(data), // Convert data to JSON string
-			}
-		)
+		axios
+			.post(
+				"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm",
+				data
+			)
 			.then((response) => {
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
-				}
-				// Optional: Handle successful response
-				console.log("Data sent successfully" + "response: " + response);
+				console.log("Success!! ", "response: ", response.data);
 			})
 			.catch((error) => {
-				// Optional: Handle error
-				console.error("Error sending data:", error.message);
+				console.error("Error:", error);
 			});
 	};
 
