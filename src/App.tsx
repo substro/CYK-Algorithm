@@ -45,7 +45,7 @@ function App() {
 
 		axios
 			.post(apiEndpoint, data, {
-				headers: { "X-Api-Key": apikey },
+				headers: { "x-api-key": apikey },
 			})
 			.then((response) => {
 				console.log("Success!! ", "response: ", response.data);
