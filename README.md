@@ -35,7 +35,7 @@ pnpm dev
 
 ## Technologies Used
 - React TSX
-- Shadcn component library
+- [Shadcn component library](https://ui.shadcn.com/)
 - Python
 - AWS Lambda
   
