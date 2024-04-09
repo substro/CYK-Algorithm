@@ -40,8 +40,8 @@ function App() {
 	const onFormSubmit: SubmitHandler<arrayFormType> = (data) => {
 		console.log(data);
 		const apiEndpoint =
-			"https://k8yiu0rqtj.execute-api.us-east-2.amazonaws.com/default/CYKAlgorithm";
-		const apikey = "ryhTgdWZ0AdZJbsnz17324m4r9zV9MC5LICtNHz4";
+			"https://qkxb1kgav8.execute-api.eu-central-1.amazonaws.com/default/CYKAlgorithm";
+		const apikey = "LWBd2rfG168nTz92pznBb5njLVM7Ijt48QiIDKvc";
 
 		axios
 			.post(apiEndpoint, data, {
