@@ -43,8 +43,12 @@ function App() {
 			"https://qkxb1kgav8.execute-api.eu-central-1.amazonaws.com/default/CYKAlgorithm";
 		const apikey = "LWBd2rfG168nTz92pznBb5njLVM7Ijt48QiIDKvc";
 
+		const formattedData = { body: JSON.stringify(data) };
+
+		console.log("formattedData", formattedData);
+
 		axios
-			.post(apiEndpoint, data, {
+			.post(apiEndpoint, formattedData, {
 				headers: { "x-api-key": apikey },
 			})
 			.then((response) => {
