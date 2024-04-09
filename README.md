@@ -3,7 +3,7 @@
 https://cyk-algorithm.netlify.app/
 
 ## Overview
-This project implements the CYK (Cocke–Younger–Kasami) algorithm for parsing context-free grammars. It includes a user interface built with React TSX using the Shadcn component library, which communicates with a Python-based CYK algorithm deployed on AWS Lambda through an API endpoint.
+This project implements the CYK (Cocke–Younger–Kasami) algorithm for parsing context-free grammars. It includes a user interface built with React TSX using the Shadcn component library, which communicates with a Python-based CYK algorithm deployed on AWS Lambda through an API Gateway.
 
 ## Features
 - User-friendly interface for entering grammars and words to be parsed
@@ -22,12 +22,8 @@ git clone https://github.com/your-username/your-repo.git
 cd your-repo
 pnpm install
 ```
-3. Configure AWS Lambda endpoint:
 
-- Obtain the endpoint URL from your AWS Lambda deployment
-- Update the endpoint URL in the React code to point to your AWS Lambda function
-  
-Start the development server:
+3. Start the development server:
 ```
 pnpm dev
 ```
