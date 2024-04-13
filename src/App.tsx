@@ -67,7 +67,7 @@ function App() {
 	};
 
 	return (
-		<div className="flex flex-col items-center bg-primary h-screen">
+		<div className="flex flex-col items-center ">
 			<header className="text-center text-secondary my-[2rem]">
 				<h1 className="text-[3.5rem] font-bold">CYK- Algorithm</h1>
 				<h3 className="text-[1rem] font-semibold text-pretty">
