@@ -44,21 +44,18 @@ function App() {
 	});
 
 	const onFormSubmit: SubmitHandler<arrayFormType> = (data) => {
-		console.log(data);
+		setResult(null);
 		const apiEndpoint =
 			"https://qkxb1kgav8.execute-api.eu-central-1.amazonaws.com/default/CYKAlgorithm";
 		const apikey = "LWBd2rfG168nTz92pznBb5njLVM7Ijt48QiIDKvc";
 
 		const formattedData = { body: JSON.stringify(data) };
 
-		// console.log("formattedData", formattedData);
-
 		axios
 			.post(apiEndpoint, formattedData, {
 				headers: { "x-api-key": apikey },
 			})
 			.then((response) => {
-				// console.log("Success!! ", "response: ", response.data);
 				const responseData = JSON.parse(response.data.body);
 				setWord(data.word);
 				setResult(responseData.result);
@@ -181,7 +178,7 @@ function App() {
 							Check Result
 						</Button>
 					</DialogTrigger>
-					<DialogContent className="sm:max-w-md">
+					<DialogContent className="min-w-min max-h-[80%] min-fit overflow-auto ">
 						{result !== null ? (
 							<div>
 								<DialogHeader className="my-[1rem]">
@@ -205,28 +202,30 @@ function App() {
 									</DialogDescription>
 								)}
 								<DialogFooter className="my-[1rem] ">
-									<Table>
-										<TableBody>
-											{cykTable
-												.slice()
-												.reverse()
-												.map((col, colIndex) => (
-													<TableRow key={colIndex}>
-														{col.map((cell, rowIndex) => (
-															<TableCell key={rowIndex}>
-																{cell.join(", ") || "-"}
-															</TableCell>
-														))}
-													</TableRow>
-												))}
-										</TableBody>
-									</Table>
+									<div className="mx-auto rounded-md border">
+										<Table>
+											<TableBody>
+												{cykTable
+													.slice()
+													.reverse()
+													.map((col, colIndex) => (
+														<TableRow key={colIndex}>
+															{col.map((cell, rowIndex) => (
+																<TableCell key={rowIndex}>
+																	{cell.join(", ") || "-"}
+																</TableCell>
+															))}
+														</TableRow>
+													))}
+											</TableBody>
+										</Table>
+									</div>
 								</DialogFooter>
 							</div>
 						) : (
 							<div className="mx-auto">
 								<Loader2 className="animate-spin mx-auto" />
-								<p>Loading</p>
+								<p>Calculating...</p>
 							</div>
 						)}
 					</DialogContent>
